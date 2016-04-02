@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# Vars
+#
+
+changed="false"
+msg=""
+failed="true"
+
+
+#
+# Main
+#
+
+
+# Guess pretty dangerous lol
+source $1
+
+if ! which mysql > /dev/null 2>&1; then
+   printf '{"failed": true, "msg": "mysql command line is not available"}'
+   exit 1
+fi
+
+if ! which mysqlshow > /dev/null 2>&1; then
+   printf '{"failed": true, "msg": "mysqlshow command line is not available"}'
+   exit 1
+fi
+
+
+if [ -z "$name" ]; then
+   printf '{"failed": true, "msg": "missing required arguments: name"}'
+   exit 1
+else
+   if ! mysqlshow "$name" > /dev/null 2>&1; then
+       printf '{"failed": true, "msg": "mysql database does not exist"}'
+       exit 1
+   fi
+
+   if table_count=`mysql -sN -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$name';"`; then
+       printf '{ "changed": %s, "table_count": %s }' "$changed" "$table_count" 
+   else
+       printf '{"failed": true, "msg": "mysql command failed"}'
+       exit 1
+   fi
+
+fi
+
+exit 0
