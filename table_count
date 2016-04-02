@@ -1,6 +1,11 @@
 #!/bin/bash
 
 #
+# This module will check the number of tables in a paticular mysql database.
+# Returns table_count as an integer.
+#
+
+#
 # Vars
 #
 
@@ -8,11 +13,9 @@ changed="false"
 msg=""
 failed="true"
 
-
 #
 # Main
 #
-
 
 # Guess pretty dangerous lol
 source $1
